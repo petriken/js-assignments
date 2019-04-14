@@ -40,9 +40,13 @@ function findElement(arr, value) {
  *    5 => [ 1, 3, 5, 7, 9 ]
  */
 function generateOdds(len) {
-   let arr = new Array(len).fill(0)
-   // console.log(arr);
-   
+  let arr = new Array(len).fill(0);
+  let arr2 = [];
+  arr.reduce((sum, current) => {
+    arr2.push(sum + current);
+    return sum + 2;
+  }, 1);
+  return arr2;
   throw new Error("Not implemented");
 }
 
@@ -678,7 +682,9 @@ function selectMany(arr, childrenSelector) {
  *   [[[ 1, 2, 3]]], [ 0, 0, 1 ]      => 2        (arr[0][0][1])
  */
 function getElementByIndexes(arr, indexes) {
-   
+   if(indexes.length===1){return arr[indexes[0]]} 
+    if (indexes.length===2){return arr[indexes[0]][indexes[1]]}
+    if (indexes.length===3){return arr[indexes[0]][indexes[1]][indexes[2]]}
     throw new Error('Not implemented');
 }
 
