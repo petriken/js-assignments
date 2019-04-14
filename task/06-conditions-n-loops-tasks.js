@@ -245,6 +245,7 @@ function getIntervalString(a, b, isStartIncluded, isEndIncluded) {
  * 'noon' => 'noon'
  */
 function reverseString(str) {
+  return str.split('').reverse().join('')
     throw new Error('Not implemented');
 }
 
