@@ -182,10 +182,10 @@ function isInsideCircle(circle, point) {
 function findFirstSingleChar(str) {
 //     let arr = [];
 //     for (let i = 0; i <= str.length; i++){
-//         if(!str.includes(str.charAt(i))) {
+//         if(!arr.includes(str.charAt(i))) {
 //             arr.push(str.charAt(i));
 //             console.log(arr);
-//           } else if (str.includes(str.charAt(i)) ){
+//           } if (arr.includes(str.charAt(i)) ){
 //             arr.pop();
 //             console.log(arr);
 //     }
@@ -217,7 +217,18 @@ function findFirstSingleChar(str) {
  *
  */
 function getIntervalString(a, b, isStartIncluded, isEndIncluded) {
-    throw new Error('Not implemented');
+  let arr = [a, b];
+  arr.sort((a, b) => a - b);
+  let start = "";
+  let end = "";
+  if (isStartIncluded) {
+    start = "[";
+  } else start = "(";
+  if (isEndIncluded) {
+    end = "]";
+  } else end = ")";
+  return `${start}${arr[0]}, ${arr[1]}${end}`;
+  throw new Error("Not implemented");
 }
 
 
@@ -251,6 +262,7 @@ function reverseString(str) {
  *   34143 => 34143
  */
 function reverseInteger(num) {
+    return String(num).split('').reverse().join('')
     throw new Error('Not implemented');
 }
 
@@ -276,6 +288,12 @@ function reverseInteger(num) {
  *   4916123456789012 => false
  */
 function isCreditCardNumber(ccn) {
+    return String(ccn).split('')
+        .reverse()
+        .map( (x) => parseInt(x) )
+        .map( (x,idx) => idx % 2 ? x * 2 : x )
+        .map( (x) => x > 9 ? (x % 10) + 1 : x )
+        .reduce( (accum, x) => accum += x ) % 10 === 0;
     throw new Error('Not implemented');
 }
 
@@ -295,7 +313,19 @@ function isCreditCardNumber(ccn) {
  *   165536 (1+6+5+5+3+6 = 26,  2+6 = 8) => 8
  */
 function getDigitalRoot(num) {
-    throw new Error('Not implemented');
+  function findSum(number) {
+    let arr2 = String(number).split("");
+    let arr = arr2.map(a => +a);
+    let result = arr.reduce(function(sum, current) {
+      return sum + current;
+    }, 0);
+    return result;
+  }
+  if (findSum(num) <= 9) {
+    return findSum(num);
+  } else return findSum(findSum(num));
+
+  throw new Error("Not implemented");
 }
 
 
@@ -321,7 +351,27 @@ function getDigitalRoot(num) {
  *   '{[(<{[]}>)]}' = true 
  */
 function isBracketsBalanced(str) {
-    throw new Error('Not implemented');
+  const openBrackets = ["[", "(", "{", "<"];
+  const allBrackets = ["[", "]", "(", ")", "{", "}", "<", ">"];
+  let resultArray = [];
+  if (str.length % 2 !== 0) {
+    return false;
+  }
+  for (let i = 0; i <= str.length; i++) {
+    let current = str[i];
+    let previous = resultArray[resultArray.length - 1];
+
+    if (openBrackets.includes(current)) {
+      resultArray.push(current);
+    } else if (current === allBrackets[allBrackets.indexOf(previous) + 1]) {
+      resultArray.pop();
+    }
+  }
+  if (resultArray.length === 0) {
+    return true;
+  }
+  return false;
+  throw new Error("Not implemented");
 }
 
 
@@ -357,7 +407,65 @@ function isBracketsBalanced(str) {
  *
  */
 function timespanToHumanString(startDate, endDate) {
-    throw new Error('Not implemented');
+  let a = new Date(startDate);
+  let b = new Date(endDate);
+  let d = b - a; // в милисекундах
+  let seconds = d / 1000; // в секундах
+
+  switch (true) {
+    case seconds >= 0 && seconds <= 45:
+      return "a few seconds ago";
+      break;
+    case seconds > 45 && seconds <= 90:
+      return "a minute ago";
+      break;
+    case seconds > 90 && seconds <= 120:
+      return `2 minutes ago`;
+      break;
+    case seconds > 120 && seconds <= 45 * 60:
+      return `${parseInt(seconds / 60)} minutes ago`;
+      break;
+    case seconds > 45 * 60 && seconds <= 90 * 60:
+      return `an hour ago`;
+      break;
+    case seconds > 90 * 60 && seconds <= 2 * 60 * 60:
+      return `2 hours ago`;
+      break;
+    case seconds > 2 * 60 * 60 && seconds <= 4.5 * 60 * 60:
+      return `${parseInt(seconds / (60 * 60))} hours ago`;
+      break;
+    case seconds > 4.5 * 60 * 60 && seconds <= 22 * 60 * 60:
+      return `${Math.ceil(seconds / (60 * 60))} hours ago`;
+      break;
+    case seconds > 22 * 60 * 60 && seconds <= 36 * 60 * 60:
+      return `a day ago`;
+      break;
+    case seconds > 36 * 60 * 60 && seconds <= 24 * 60 * 60 * 2:
+      return `2 days ago`;
+      break;
+    case seconds > 24 * 60 * 60 * 2 && seconds <= 24 * 60 * 60 * 25:
+      return `${parseInt(seconds / (24 * 60 * 60))} days ago`;
+      break;
+    case seconds > 24 * 60 * 60 * 25 && seconds <= 24 * 60 * 60 * 45:
+      return `a month ago`;
+      break;
+    case seconds > 24 * 60 * 60 * 45 && seconds <= 24 * 60 * 60 * 60:
+      return `2 months ago`;
+      break;
+    case seconds > 24 * 60 * 60 * 60 && seconds <= 24 * 60 * 60 * 345:
+      return `${Math.ceil(seconds / ((24 * 60 * 60 * 345) / 11))} months ago`;
+      break;
+    case seconds > 24 * 60 * 60 * 345 && seconds <= 24 * 60 * 60 * 545:
+      return `a year ago`;
+      break;
+    case seconds >= 24 * 60 * 60 * 546:
+      return `${Math.floor(seconds / (24 * 60 * 60 * 365))} years ago`;
+      break;
+
+    default:
+      alert("Я таких значений не знаю");
+  }
+  throw new Error("Not implemented");
 }
 
 
@@ -381,6 +489,7 @@ function timespanToHumanString(startDate, endDate) {
  *    365, 10 => '365'
  */
 function toNaryString(num, n) {
+    return num.toString(n)
     throw new Error('Not implemented');
 }
 
@@ -421,6 +530,23 @@ function getCommonDirectoryPath(pathes) {
  *
  */
 function getMatrixProduct(m1, m2) {
+    let rowsA = m1.length, colsA = m1[0].length,
+        rowsB = m2.length, colsB = m2[0].length,
+        C = [];
+
+    if (colsA != rowsB) return false;
+
+    for (let i = 0; i < rowsA; i++) C[i] = [];
+
+    for (let k = 0; k < colsB; k++)
+     { for (let i = 0; i < rowsA; i++)
+        { let temp = 0;
+          for (let j = 0; j < rowsB; j++) temp += m1[i][j]*m2[j][k];
+          C[i][k] = temp;
+        }
+     }
+
+    return C;
     throw new Error('Not implemented');
 }
 
